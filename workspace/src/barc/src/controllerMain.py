@@ -33,14 +33,19 @@ def main():
     # Initializa ROS node
     rospy.init_node("LMPC")
 
-    input_commands = rospy.Publisher('ecu_LMPC', ECU, queue_size=1)
-    # input_commands = rospy.Publisher('ecu', ECU, queue_size=1)
-    pred_treajecto = rospy.Publisher('OL_predictions', prediction, queue_size=1)
-    sel_safe_set   = rospy.Publisher('SS', SafeSetGlob, queue_size=1)
-
     mode = rospy.get_param("/control/mode")
     saveData = rospy.get_param("/control/saveData")
     sel_car = rospy.get_param("/control/car")
+
+    if mode == "simulations":
+        input_commands = rospy.Publisher('ecu', ECU, queue_size=1)
+    else:
+        input_commands = rospy.Publisher('ecu_LMPC', ECU, queue_size=1)
+    
+    pred_treajecto = rospy.Publisher('OL_predictions', prediction, queue_size=1)
+    sel_safe_set   = rospy.Publisher('SS', SafeSetGlob, queue_size=1)
+
+
 
 
     loop_rate = 10.0
@@ -61,7 +66,7 @@ def main():
     
     # Choose Controller and Number of Laps
 
-    PickController = "LMPC"
+    PickController = "TI_MPC"
     NumberOfLaps   = 30
     vt = 1.2
     PathFollowingLaps = 2
